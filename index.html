@@ -1,1 +1,1522 @@
-<html></html>
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Absensi Siswa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    body { 
+      box-sizing: border-box; 
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    html, body, #app { 
+      height: 100%; 
+    }
+    
+    .gradient-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .gradient-success {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+    
+    .gradient-warning {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+    
+    .gradient-info {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    }
+    
+    .gradient-danger {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+    
+    .card-elevated {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .student-item {
+      border-left: 4px solid #667eea;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .student-item:hover {
+      transform: translateX(4px);
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.15);
+    }
+    
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.3s ease;
+    }
+    
+    .status-badge.hadir {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    
+    .status-badge.izin {
+      background: #dbeafe;
+      color: #0c4a6e;
+    }
+    
+    .status-badge.sakit {
+      background: #fed7aa;
+      color: #92400e;
+    }
+    
+    .status-badge.bolos {
+      background: #e9d5ff;
+      color: #5b21b6;
+    }
+    
+    .status-badge.alpa {
+      background: #fecaca;
+      color: #7f1d1d;
+    }
+    
+    .btn-status {
+      width: 2.5rem;
+      height: 2.5rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.5rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: white;
+      color: #666;
+    }
+    
+    .btn-status:hover {
+      transform: scale(1.08);
+      border-color: #667eea;
+    }
+    
+    .btn-status.active {
+      color: white;
+      border-color: transparent;
+    }
+    
+    .btn-status.active.hadir {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+    
+    .btn-status.active.izin {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    }
+    
+    .btn-status.active.sakit {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+    
+    .btn-status.active.bolos {
+      background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+    }
+    
+    .btn-status.active.alpa {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+    
+    .loading-spinner {
+      width: 2rem;
+      height: 2rem;
+      border: 3px solid rgba(102, 126, 234, 0.2);
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.4s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .page-transition {
+      animation: pageIn 0.3s ease-out;
+    }
+    
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 overflow-auto">
+  <div id="app" class="w-full h-full flex flex-col"><!-- Header -->
+   <header class="gradient-primary shadow-lg flex-shrink-0">
+    <div class="w-full px-4 py-6 text-white">
+     <div class="max-w-7xl mx-auto">
+      <h1 id="header-title" class="text-3xl font-bold">Sistem Absensi Siswa</h1>
+      <p id="current-date" class="text-purple-100 mt-1 text-sm"></p>
+     </div>
+    </div>
+   </header><!-- Main Content -->
+   <main class="flex-1 overflow-auto w-full"><!-- Home Page -->
+    <div id="page-home" class="w-full px-4 py-6 page-transition">
+     <div class="max-w-6xl mx-auto">
+      <div class="card-elevated rounded-2xl p-6">
+       <div class="flex items-center gap-3 mb-6">
+        <div class="w-1 h-8 bg-gradient-primary rounded-full"></div>
+        <h2 class="text-2xl font-bold text-gray-800">Daftar Siswa</h2><span id="home-student-count" class="ml-auto bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-semibold">0 siswa</span>
+       </div>
+       <div id="home-students-container" class="space-y-3">
+        <div class="flex items-center justify-center py-12">
+         <div class="loading-spinner"></div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- Attendance Page -->
+    <div id="page-absensi" class="hidden w-full px-4 py-6 page-transition">
+     <div class="max-w-6xl mx-auto space-y-6"><!-- Schedule Settings Card -->
+      <div class="card-elevated rounded-2xl p-6">
+       <div class="flex items-center gap-3 mb-5">
+        <div class="w-1 h-8 bg-gradient-success rounded-full"></div>
+        <h2 class="text-2xl font-bold text-gray-800">Pengaturan Jadwal</h2>
+       </div>
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div><label for="schedule-date" class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Absensi</label> <input type="date" id="schedule-date" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all bg-white font-medium">
+        </div>
+        <div><label for="schedule-hour" class="block text-sm font-semibold text-gray-700 mb-2">Jam Pembelajaran</label> <select id="schedule-hour" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all bg-white font-medium"> <option value="">-- Pilih Jam --</option> </select>
+        </div>
+       </div>
+       <div class="mt-5 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border-l-4 border-blue-500">
+        <div class="grid grid-cols-2 gap-4">
+         <div>
+          <p class="text-xs text-gray-600 font-semibold uppercase tracking-wider">Tanggal</p>
+          <p id="display-date" class="text-lg font-bold text-gray-800 mt-1">-</p>
+         </div>
+         <div>
+          <p class="text-xs text-gray-600 font-semibold uppercase tracking-wider">Jam</p>
+          <p id="display-hour" class="text-lg font-bold text-gray-800 mt-1">-</p>
+         </div>
+        </div>
+       </div>
+      </div><!-- Attendance Input Card -->
+      <div class="card-elevated rounded-2xl p-6">
+       <div class="flex items-center gap-3 mb-5 flex-wrap">
+        <div class="w-1 h-8 bg-gradient-primary rounded-full"></div>
+        <h2 class="text-2xl font-bold text-gray-800">Input Absensi</h2><span id="absensi-student-count" class="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">0 siswa</span> <button id="btn-mark-all-hadir" class="ml-auto bg-gradient-success text-white font-bold py-4 px-8 rounded-lg hover:shadow-xl transition-all text-lg transform hover:scale-110 hover:bg-gradient-to-r hover:from-green-600 hover:to-emerald-600"> ✓ Hadir Semua </button>
+       </div>
+       <div id="absensi-students-container" class="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+        <div class="flex items-center justify-center py-12 text-gray-500">
+         <p class="font-medium">Pilih tanggal dan jam terlebih dahulu</p>
+        </div>
+       </div>
+      </div><!-- Statistics Card -->
+      <div class="card-elevated rounded-2xl p-6">
+       <div class="flex items-center gap-3 mb-5">
+        <div class="w-1 h-8 bg-gradient-info rounded-full"></div>
+        <h2 class="text-2xl font-bold text-gray-800">Statistik Absensi</h2>
+       </div>
+       <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-gray-300">
+         <div class="text-3xl font-bold text-gray-700 mb-1" id="stat-total">
+          0
+         </div>
+         <div class="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+          Total
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-green-500">
+         <div class="text-3xl font-bold text-green-600 mb-1" id="stat-hadir">
+          0
+         </div>
+         <div class="text-xs font-semibold text-green-700 uppercase tracking-wide">
+          Hadir
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-blue-500">
+         <div class="text-3xl font-bold text-blue-600 mb-1" id="stat-izin">
+          0
+         </div>
+         <div class="text-xs font-semibold text-blue-700 uppercase tracking-wide">
+          Izin
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-amber-500">
+         <div class="text-3xl font-bold text-amber-600 mb-1" id="stat-sakit">
+          0
+         </div>
+         <div class="text-xs font-semibold text-amber-700 uppercase tracking-wide">
+          Sakit
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-purple-500">
+         <div class="text-3xl font-bold text-purple-600 mb-1" id="stat-bolos">
+          0
+         </div>
+         <div class="text-xs font-semibold text-purple-700 uppercase tracking-wide">
+          Bolos
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-red-500">
+         <div class="text-3xl font-bold text-red-600 mb-1" id="stat-alpa">
+          0
+         </div>
+         <div class="text-xs font-semibold text-red-700 uppercase tracking-wide">
+          Alpa
+         </div>
+        </div>
+       </div>
+      </div><!-- Edit and Submit Buttons -->
+      <div class="flex justify-center gap-4"><button id="btn-edit" class="gradient-warning text-white font-bold py-4 px-12 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"> ✏️ Edit Data </button> <button id="btn-submit" class="gradient-primary text-white font-bold py-4 px-12 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"> 📤 Kirim Absensi </button>
+      </div>
+     </div>
+    </div><!-- Edit Page -->
+    <div id="page-edit" class="hidden w-full px-4 py-6 page-transition">
+     <div class="max-w-6xl mx-auto space-y-6"><!-- Search & Filter Card -->
+      <div class="card-elevated rounded-2xl p-6">
+       <div class="flex items-center gap-3 mb-5">
+        <div class="w-1 h-8 bg-gradient-warning rounded-full"></div>
+        <h2 class="text-2xl font-bold text-gray-800">Cari Data Absensi untuk Diedit</h2>
+       </div>
+       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div><label for="edit-search-date" class="block text-sm font-semibold text-gray-700 mb-2">Tanggal</label> <input type="date" id="edit-search-date" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white font-medium">
+        </div>
+        <div><label for="edit-search-hour" class="block text-sm font-semibold text-gray-700 mb-2">Jam Pembelajaran</label> <select id="edit-search-hour" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white font-medium"> <option value="">-- Semua Jam --</option> <option value="1">Jam 1</option> <option value="2">Jam 2</option> <option value="3">Jam 3</option> <option value="4">Jam 4</option> <option value="5">Jam 5</option> <option value="6">Jam 6</option> <option value="7">Jam 7</option> <option value="8">Jam 8</option> <option value="9">Jam 9</option> </select>
+        </div>
+        <div><label for="edit-search-student" class="block text-sm font-semibold text-gray-700 mb-2">Nama/NISN Siswa</label> <input type="text" id="edit-search-student" placeholder="Cari nama atau NISN..." class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white font-medium">
+        </div>
+       </div>
+      </div><!-- Edit Results Card -->
+      <div class="card-elevated rounded-2xl p-6">
+       <div class="flex items-center gap-3 mb-5">
+        <div class="w-1 h-8 bg-gradient-warning rounded-full"></div>
+        <h2 class="text-2xl font-bold text-gray-800">Data Absensi yang Dapat Diedit</h2><span id="edit-results-count" class="ml-auto bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-semibold">0 data</span>
+       </div>
+       <div id="edit-results-container" class="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+        <div class="flex items-center justify-center py-12 text-gray-500">
+         <p class="font-medium">Gunakan filter di atas untuk mencari data absensi</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- Recap Page -->
+    <div id="page-rekapan" class="hidden w-full px-4 py-6 page-transition">
+     <div class="max-w-7xl mx-auto">
+      <div class="card-elevated rounded-2xl p-6">
+       <div class="flex items-center gap-3 mb-5">
+        <div class="w-1 h-8 bg-gradient-info rounded-full"></div>
+        <h2 class="text-2xl font-bold text-gray-800">Rekapan Absensi</h2>
+       </div><!-- Filter -->
+       <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+         <div><label for="filter-from" class="block text-sm font-semibold text-gray-700 mb-2">Dari Tanggal</label> <input type="date" id="filter-from" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500">
+         </div>
+         <div><label for="filter-to" class="block text-sm font-semibold text-gray-700 mb-2">Sampai Tanggal</label> <input type="date" id="filter-to" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500">
+         </div>
+         <div class="flex items-end"><button id="btn-filter" class="w-full gradient-primary text-white font-bold py-2 px-6 rounded-lg hover:shadow-lg transition-all"> 🔍 Filter </button>
+         </div>
+        </div>
+       </div><!-- Table -->
+       <div class="overflow-x-auto">
+        <table class="w-full">
+         <thead>
+          <tr class="bg-gradient-to-r from-purple-50 to-blue-50 border-b-2 border-gray-200">
+           <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wide">No</th>
+           <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wide">Nama Siswa</th>
+           <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wide">NISN</th>
+           <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wide">Tanggal</th>
+           <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wide">Jam</th>
+           <th class="px-4 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wide">Status</th>
+          </tr>
+         </thead>
+         <tbody id="recap-table-body">
+          <tr>
+           <td colspan="6" class="px-4 py-8 text-center text-gray-500">Belum ada data rekapan</td>
+          </tr>
+         </tbody>
+        </table>
+       </div><!-- Recap Statistics -->
+       <div class="mt-6 grid grid-cols-2 md:grid-cols-6 gap-3">
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-gray-300">
+         <div class="text-2xl font-bold text-gray-700" id="recap-stat-total">
+          0
+         </div>
+         <div class="text-xs font-semibold text-gray-600 uppercase mt-1">
+          Total
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-green-500">
+         <div class="text-2xl font-bold text-green-600" id="recap-stat-hadir">
+          0
+         </div>
+         <div class="text-xs font-semibold text-green-700 uppercase mt-1">
+          Hadir
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-blue-500">
+         <div class="text-2xl font-bold text-blue-600" id="recap-stat-izin">
+          0
+         </div>
+         <div class="text-xs font-semibold text-blue-700 uppercase mt-1">
+          Izin
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-amber-500">
+         <div class="text-2xl font-bold text-amber-600" id="recap-stat-sakit">
+          0
+         </div>
+         <div class="text-xs font-semibold text-amber-700 uppercase mt-1">
+          Sakit
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-purple-500">
+         <div class="text-2xl font-bold text-purple-600" id="recap-stat-bolos">
+          0
+         </div>
+         <div class="text-xs font-semibold text-purple-700 uppercase mt-1">
+          Bolos
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-red-500">
+         <div class="text-2xl font-bold text-red-600" id="recap-stat-alpa">
+          0
+         </div>
+         <div class="text-xs font-semibold text-red-700 uppercase mt-1">
+          Alpa
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div><!-- Export Page -->
+    <div id="page-export" class="hidden w-full px-4 py-6 page-transition">
+     <div class="max-w-6xl mx-auto">
+      <div class="card-elevated rounded-2xl p-6">
+       <div class="flex items-center gap-3 mb-6">
+        <div class="w-1 h-8 bg-gradient-success rounded-full"></div>
+        <h2 class="text-2xl font-bold text-gray-800">Export Data Absensi</h2>
+       </div><!-- Export Options -->
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"><!-- Export as CSV -->
+        <div class="card-elevated rounded-xl p-6 border-2 border-blue-200 hover:border-blue-500 hover:shadow-lg transition-all">
+         <div class="flex items-center gap-4 mb-4">
+          <div class="w-12 h-12 rounded-lg bg-gradient-info flex items-center justify-center text-white text-2xl">
+           📄
+          </div>
+          <h3 class="text-lg font-bold text-gray-800">Export ke CSV</h3>
+         </div>
+         <p class="text-sm text-gray-600 mb-4">Download data absensi dalam format CSV yang dapat dibuka di Excel</p><button class="w-full gradient-info text-white font-bold py-3 px-4 rounded-lg hover:shadow-lg transition-all" id="btn-export-csv"> 📥 Download CSV </button>
+        </div><!-- Export as PDF -->
+        <div class="card-elevated rounded-xl p-6 border-2 border-red-200 hover:border-red-500 hover:shadow-lg transition-all">
+         <div class="flex items-center gap-4 mb-4">
+          <div class="w-12 h-12 rounded-lg bg-gradient-danger flex items-center justify-center text-white text-2xl">
+           📋
+          </div>
+          <h3 class="text-lg font-bold text-gray-800">Export ke PDF</h3>
+         </div>
+         <p class="text-sm text-gray-600 mb-4">Download laporan absensi dalam format PDF yang profesional dan siap cetak</p><button class="w-full gradient-danger text-white font-bold py-3 px-4 rounded-lg hover:shadow-lg transition-all" id="btn-export-pdf"> 📥 Download PDF </button>
+        </div>
+       </div><!-- Filter for Export -->
+       <div class="bg-gray-50 rounded-lg border border-gray-200 p-6 mb-6">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">⚙️ Pengaturan Export</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+         <div><label for="export-from-date" class="block text-sm font-semibold text-gray-700 mb-2">Dari Tanggal</label> <input type="date" id="export-from-date" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500">
+         </div>
+         <div><label for="export-to-date" class="block text-sm font-semibold text-gray-700 mb-2">Sampai Tanggal</label> <input type="date" id="export-to-date" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500">
+         </div>
+         <div class="flex items-end gap-2"><button id="btn-set-today" class="flex-1 bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600 transition-all text-sm"> 📅 Hari Ini </button> <button id="btn-set-week" class="flex-1 bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600 transition-all text-sm"> 📆 Minggu </button>
+         </div>
+        </div>
+       </div><!-- Data Summary -->
+       <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border-l-4 border-green-500">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">📊 Ringkasan Data untuk Export</h3>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
+         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+          <div class="text-2xl font-bold text-gray-700" id="export-stat-total">
+           0
+          </div>
+          <div class="text-xs font-semibold text-gray-600 uppercase">
+           Total
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+          <div class="text-2xl font-bold text-green-600" id="export-stat-hadir">
+           0
+          </div>
+          <div class="text-xs font-semibold text-green-700 uppercase">
+           Hadir
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+          <div class="text-2xl font-bold text-blue-600" id="export-stat-izin">
+           0
+          </div>
+          <div class="text-xs font-semibold text-blue-700 uppercase">
+           Izin
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+          <div class="text-2xl font-bold text-amber-600" id="export-stat-sakit">
+           0
+          </div>
+          <div class="text-xs font-semibold text-amber-700 uppercase">
+           Sakit
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+          <div class="text-2xl font-bold text-purple-600" id="export-stat-bolos">
+           0
+          </div>
+          <div class="text-xs font-semibold text-purple-700 uppercase">
+           Bolos
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+          <div class="text-2xl font-bold text-red-600" id="export-stat-alpa">
+           0
+          </div>
+          <div class="text-xs font-semibold text-red-700 uppercase">
+           Alpa
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </main><!-- Bottom Navigation with 5 Items -->
+   <footer class="gradient-primary shadow-xl flex-shrink-0">
+    <div class="w-full px-4">
+     <div class="max-w-7xl mx-auto flex justify-center gap-2 md:gap-4"><button class="nav-item active" data-page="home"> <span class="text-2xl">🏠</span> <span class="text-xs font-semibold">Home</span> </button> <button class="nav-item" data-page="absensi"> <span class="text-2xl">📋</span> <span class="text-xs font-semibold">Absensi</span> </button> <button class="nav-item" data-page="edit"> <span class="text-2xl">✏️</span> <span class="text-xs font-semibold">Edit</span> </button> <button class="nav-item" data-page="rekapan"> <span class="text-2xl">📊</span> <span class="text-xs font-semibold">Rekapan</span> </button> <button class="nav-item" data-page="export"> <span class="text-2xl">📥</span> <span class="text-xs font-semibold">Export</span> </button>
+     </div>
+    </div>
+   </footer>
+  </div>
+  <script>
+    // =====================
+    // Configuration & State
+    // =====================
+    const defaultConfig = {
+      header_title: 'Sistem Absensi Siswa'
+    };
+
+    let config = { ...defaultConfig };
+    let allStudents = [];
+    let studentsByNisn = {};
+    let attendanceRecords = [];
+    let tempAbsenceData = {};
+    let currentDate = null;
+    let currentHour = null;
+    let submittedJams = {};
+    let isEditMode = false;
+    let editedDate = null;
+    let editedJam = null;
+    let editRecordsToUpdate = {};
+
+    // =====================
+    // Utility Functions
+    // =====================
+    function parseCSV(text) {
+      const rows = [];
+      let currentRow = [];
+      let currentField = '';
+      let insideQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const nextChar = text[i + 1];
+
+        if (char === '"') {
+          if (insideQuotes && nextChar === '"') {
+            currentField += '"';
+            i++;
+          } else {
+            insideQuotes = !insideQuotes;
+          }
+        } else if (char === ',' && !insideQuotes) {
+          currentRow.push(currentField.trim());
+          currentField = '';
+        } else if ((char === '\n' || char === '\r') && !insideQuotes) {
+          if (currentField || currentRow.length > 0) {
+            currentRow.push(currentField.trim());
+            if (currentRow.some(f => f)) {
+              rows.push(currentRow);
+            }
+            currentRow = [];
+            currentField = '';
+          }
+          if (char === '\r' && nextChar === '\n') i++;
+        } else {
+          currentField += char;
+        }
+      }
+
+      if (currentField || currentRow.length > 0) {
+        currentRow.push(currentField.trim());
+        if (currentRow.some(f => f)) {
+          rows.push(currentRow);
+        }
+      }
+
+      return rows;
+    }
+
+    function updateSubmittedJams() {
+      submittedJams = {};
+      attendanceRecords.forEach(record => {
+        const key = `${record.date}-${record.jam}`;
+        if (!submittedJams[key]) {
+          submittedJams[key] = [];
+        }
+        submittedJams[key].push(record.nisn);
+      });
+    }
+
+    function isJamSubmitted(date, jam) {
+      const key = `${date}-${jam}`;
+      return submittedJams[key] && submittedJams[key].length > 0;
+    }
+
+    function getStudentStatusForJam(nisn, date, jam) {
+      const record = attendanceRecords.find(r => r.nisn === nisn && r.date === date && r.jam === jam);
+      return record ? record.status : null;
+    }
+
+    function setEditMode(date, jam) {
+      isEditMode = true;
+      editedDate = date;
+      editedJam = jam;
+    }
+
+    function clearEditMode() {
+      isEditMode = false;
+      editedDate = null;
+      editedJam = null;
+    }
+
+    // =====================
+    // Load Student Data
+    // =====================
+    async function loadStudentData() {
+      try {
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR3Gpb1g8x_B972izZcwsu9_l1AbcCMi9-GDxVddUs993d911eKGaNUIKdOAoRP_3c_6vlGro6-n9ZF/pub?output=csv';
+        const response = await fetch(csvUrl);
+        const csvText = await response.text();
+        
+        const rows = parseCSV(csvText);
+        if (rows.length < 2) {
+          allStudents = [];
+          renderAllStudents();
+          return;
+        }
+
+        const headers = rows[0].map(h => h.toLowerCase());
+        
+        allStudents = rows.slice(1).map((row, idx) => {
+          let nisn = '';
+          let name = '';
+          let dob = '';
+
+          let nisnIdx = headers.findIndex(h => h.includes('nisn') || h.includes('nis'));
+          let nameIdx = headers.findIndex(h => h.includes('nama') || h.includes('siswa'));
+          let dobIdx = headers.findIndex(h => h.includes('lahir') || h.includes('tgl') || h.includes('birth'));
+
+          if (nisnIdx >= 0 && row[nisnIdx]) nisn = row[nisnIdx].trim();
+          if (nameIdx >= 0 && row[nameIdx]) name = row[nameIdx].trim();
+          if (dobIdx >= 0 && row[dobIdx]) dob = row[dobIdx].trim();
+
+          if (!nisn) {
+            for (let i = 0; i < row.length; i++) {
+              if (/^\d{5,}$/.test(row[i]?.trim())) {
+                nisn = row[i].trim();
+                break;
+              }
+            }
+          }
+
+          if (!name) {
+            for (let i = 1; i < row.length; i++) {
+              const val = row[i]?.trim();
+              if (val && val.length > 2 && isNaN(val)) {
+                name = val;
+                break;
+              }
+            }
+          }
+
+          return (nisn && name) ? { id: idx + 1, nisn, name, dob } : null;
+        }).filter(s => s !== null);
+
+        allStudents.forEach(student => {
+          studentsByNisn[student.nisn] = student;
+        });
+
+        console.log('✓ Loaded students:', allStudents.length);
+        renderAllStudents();
+      } catch (error) {
+        console.error('Error loading CSV:', error);
+        allStudents = [];
+        renderAllStudents();
+      }
+    }
+
+    // =====================
+    // Render Functions (Optimized)
+    // =====================
+    function renderAllStudents() {
+      const container = document.getElementById('home-students-container');
+      const countElement = document.getElementById('home-student-count');
+
+      if (allStudents.length === 0) {
+        container.innerHTML = '<p class="text-center py-8 text-gray-500">Tidak ada data siswa</p>';
+        countElement.textContent = '0 siswa';
+        return;
+      }
+
+      countElement.textContent = `${allStudents.length} siswa`;
+
+      const fragment = document.createDocumentFragment();
+      allStudents.forEach((student, idx) => {
+        const div = document.createElement('div');
+        div.className = 'student-item bg-white rounded-xl p-4 shadow-sm hover:shadow-md';
+        div.innerHTML = `
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold flex-shrink-0 text-lg">
+              ${idx + 1}
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-bold text-gray-800 text-lg">${student.name}</p>
+              <p class="text-sm text-gray-500">NISN: ${student.nisn}</p>
+              ${student.dob ? `<p class="text-sm text-gray-500">Lahir: ${student.dob}</p>` : ''}
+            </div>
+          </div>
+        `;
+        fragment.appendChild(div);
+      });
+
+      container.innerHTML = '';
+      container.appendChild(fragment);
+    }
+
+    function renderAttendanceStudents() {
+      const container = document.getElementById('absensi-students-container');
+      const countElement = document.getElementById('absensi-student-count');
+
+      if (!currentDate || !currentHour) {
+        container.innerHTML = '<p class="text-center py-8 text-gray-500">Pilih tanggal dan jam terlebih dahulu</p>';
+        return;
+      }
+
+      if (allStudents.length === 0) {
+        container.innerHTML = '<p class="text-center py-8 text-gray-500">Tidak ada data siswa</p>';
+        return;
+      }
+
+      countElement.textContent = `${allStudents.length} siswa`;
+
+      const fragment = document.createDocumentFragment();
+      allStudents.forEach((student, idx) => {
+        let status = tempAbsenceData[student.nisn];
+        if (!status) {
+          status = getStudentStatusForJam(student.nisn, currentDate, currentHour);
+        }
+
+        const statusText = status ? { hadir: '✓ Hadir', izin: '📋 Izin', sakit: '🏥 Sakit', bolos: '🚪 Bolos', alpa: '✗ Alpa' }[status] : 'Belum Absen';
+
+        const div = document.createElement('div');
+        div.className = 'student-item bg-white rounded-xl p-4 shadow-sm hover:shadow-md';
+        div.innerHTML = `
+          <div class="flex items-center justify-between gap-4 flex-wrap">
+            <div class="flex items-center gap-4 flex-1 min-w-0">
+              <div class="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold flex-shrink-0 text-lg">
+                ${idx + 1}
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-bold text-gray-800 text-lg">${student.name}</p>
+                <p class="text-sm text-gray-500">NISN: ${student.nisn}</p>
+                <p class="text-sm font-semibold mt-2 ${status ? `text-${status === 'hadir' ? 'green' : status === 'izin' ? 'blue' : status === 'sakit' ? 'amber' : status === 'bolos' ? 'purple' : 'red'}-600` : 'text-gray-400'}">${statusText}</p>
+              </div>
+            </div>
+            
+            <div class="flex gap-2 flex-wrap justify-end">
+              <button class="btn-status ${status === 'hadir' ? 'active hadir' : ''}" data-nisn="${student.nisn}" data-status="hadir">H</button>
+              <button class="btn-status ${status === 'izin' ? 'active izin' : ''}" data-nisn="${student.nisn}" data-status="izin">I</button>
+              <button class="btn-status ${status === 'sakit' ? 'active sakit' : ''}" data-nisn="${student.nisn}" data-status="sakit">S</button>
+              <button class="btn-status ${status === 'bolos' ? 'active bolos' : ''}" data-nisn="${student.nisn}" data-status="bolos">B</button>
+              <button class="btn-status ${status === 'alpa' ? 'active alpa' : ''}" data-nisn="${student.nisn}" data-status="alpa">A</button>
+            </div>
+          </div>
+        `;
+        fragment.appendChild(div);
+      });
+
+      container.innerHTML = '';
+      container.appendChild(fragment);
+
+      document.querySelectorAll('#absensi-students-container .btn-status').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const nisn = btn.dataset.nisn;
+          const status = btn.dataset.status;
+          tempAbsenceData[nisn] = tempAbsenceData[nisn] === status ? null : status;
+          if (!tempAbsenceData[nisn]) delete tempAbsenceData[nisn];
+          renderAttendanceStudents();
+          updateAttendanceStats();
+        });
+      });
+
+      updateAttendanceStats();
+    }
+
+    function searchEditRecords() {
+      const dateVal = document.getElementById('edit-search-date').value;
+      const hourVal = document.getElementById('edit-search-hour').value;
+      const studentVal = document.getElementById('edit-search-student').value.toLowerCase();
+
+      let filtered = attendanceRecords;
+
+      if (dateVal) {
+        filtered = filtered.filter(r => r.date === dateVal);
+      }
+
+      if (hourVal) {
+        filtered = filtered.filter(r => r.jam === hourVal);
+      }
+
+      if (studentVal) {
+        filtered = filtered.filter(r =>
+          r.student_name.toLowerCase().includes(studentVal) ||
+          r.nisn.includes(studentVal)
+        );
+      }
+
+      renderEditResults(filtered);
+    }
+
+    function renderEditResults(records) {
+      const container = document.getElementById('edit-results-container');
+      const countElement = document.getElementById('edit-results-count');
+
+      if (records.length === 0) {
+        container.innerHTML = '<p class="text-center py-12 text-gray-500">Tidak ada data yang cocok dengan pencarian</p>';
+        countElement.textContent = '0 data';
+        return;
+      }
+
+      countElement.textContent = `${records.length} data`;
+
+      const fragment = document.createDocumentFragment();
+      
+      records.forEach((record, idx) => {
+        const status = record.status;
+        const date = new Date(record.date);
+        const dateStr = date.toLocaleDateString('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit' });
+        const recordKey = record.__backendId;
+        const displayStatus = editRecordsToUpdate[recordKey] || status;
+        const statusColors = { hadir: 'green', izin: 'blue', sakit: 'amber', bolos: 'purple', alpa: 'red' };
+        const statusDisplay = { hadir: '✓ Hadir', izin: '📋 Izin', sakit: '🏥 Sakit', bolos: '🚪 Bolos', alpa: '✗ Alpa' }[displayStatus];
+
+        const div = document.createElement('div');
+        div.className = 'student-item bg-white rounded-xl p-4 shadow-sm hover:shadow-md';
+        div.innerHTML = `
+          <div class="flex items-center justify-between gap-4 flex-wrap">
+            <div class="flex items-center gap-4 flex-1 min-w-0">
+              <div class="w-12 h-12 rounded-full bg-gradient-warning flex items-center justify-center text-white font-bold flex-shrink-0 text-lg">
+                ${idx + 1}
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-bold text-gray-800 text-lg">${record.student_name}</p>
+                <p class="text-sm text-gray-500">NISN: ${record.nisn}</p>
+                <p class="text-sm text-gray-500 mt-1">
+                  <span class="font-semibold">${dateStr}</span> • 
+                  <span class="font-semibold">Jam ${record.jam}</span>
+                </p>
+                <p class="text-sm font-semibold mt-2 text-${statusColors[displayStatus]}-600">Status: ${statusDisplay}</p>
+              </div>
+            </div>
+            
+            <div class="flex gap-2 flex-wrap justify-end">
+              <button class="btn-status ${displayStatus === 'hadir' ? 'active hadir' : ''}" data-backend-id="${recordKey}" data-status="hadir">H</button>
+              <button class="btn-status ${displayStatus === 'izin' ? 'active izin' : ''}" data-backend-id="${recordKey}" data-status="izin">I</button>
+              <button class="btn-status ${displayStatus === 'sakit' ? 'active sakit' : ''}" data-backend-id="${recordKey}" data-status="sakit">S</button>
+              <button class="btn-status ${displayStatus === 'bolos' ? 'active bolos' : ''}" data-backend-id="${recordKey}" data-status="bolos">B</button>
+              <button class="btn-status ${displayStatus === 'alpa' ? 'active alpa' : ''}" data-backend-id="${recordKey}" data-status="alpa">A</button>
+            </div>
+          </div>
+        `;
+        fragment.appendChild(div);
+      });
+
+      container.innerHTML = '';
+      container.appendChild(fragment);
+
+      document.querySelectorAll('#edit-results-container .btn-status').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const backendId = this.dataset.backendId;
+          const newStatus = this.dataset.status;
+          const oldStatus = editRecordsToUpdate[backendId];
+
+          if (oldStatus === newStatus) {
+            delete editRecordsToUpdate[backendId];
+          } else {
+            editRecordsToUpdate[backendId] = newStatus;
+          }
+
+          searchEditRecords();
+        });
+      });
+    }
+
+    function renderRecapTable() {
+      const tbody = document.getElementById('recap-table-body');
+      const dateFrom = document.getElementById('filter-from').value;
+      const dateTo = document.getElementById('filter-to').value;
+
+      if (!dateFrom || !dateTo) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-500">Pilih rentang tanggal</td></tr>';
+        return;
+      }
+
+      const filtered = attendanceRecords.filter(r => r.date >= dateFrom && r.date <= dateTo)
+        .sort((a, b) => {
+          if (a.date !== b.date) return new Date(a.date) - new Date(b.date);
+          return a.student_name.localeCompare(b.student_name);
+        });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-500">Tidak ada data</td></tr>';
+        updateRecapStats([]);
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+      filtered.forEach((record, idx) => {
+        const date = new Date(record.date);
+        const dateStr = date.toLocaleDateString('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit' });
+        const statusClasses = {
+          hadir: 'status-badge hadir',
+          izin: 'status-badge izin',
+          sakit: 'status-badge sakit',
+          bolos: 'status-badge bolos',
+          alpa: 'status-badge alpa'
+        };
+        const statusText = { hadir: '✓ Hadir', izin: '📋 Izin', sakit: '🏥 Sakit', bolos: '🚪 Bolos', alpa: '✗ Alpa' }[record.status];
+
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-gray-200 hover:bg-purple-50 transition-colors';
+        tr.innerHTML = `
+          <td class="px-4 py-3 font-medium text-gray-800">${idx + 1}</td>
+          <td class="px-4 py-3 font-semibold text-gray-800">${record.student_name}</td>
+          <td class="px-4 py-3 text-gray-600">${record.nisn}</td>
+          <td class="px-4 py-3 text-gray-600">${dateStr}</td>
+          <td class="px-4 py-3 text-gray-600">Jam ${record.jam}</td>
+          <td class="px-4 py-3 text-center"><span class="${statusClasses[record.status]}">${statusText}</span></td>
+        `;
+        fragment.appendChild(tr);
+      });
+
+      tbody.innerHTML = '';
+      tbody.appendChild(fragment);
+      updateRecapStats(filtered);
+    }
+
+    function updateExportStats() {
+      const dateFrom = document.getElementById('export-from-date').value;
+      const dateTo = document.getElementById('export-to-date').value;
+
+      if (!dateFrom || !dateTo) {
+        document.getElementById('export-stat-total').textContent = '0';
+        document.getElementById('export-stat-hadir').textContent = '0';
+        document.getElementById('export-stat-izin').textContent = '0';
+        document.getElementById('export-stat-sakit').textContent = '0';
+        document.getElementById('export-stat-bolos').textContent = '0';
+        document.getElementById('export-stat-alpa').textContent = '0';
+        return;
+      }
+
+      const filtered = attendanceRecords.filter(r => r.date >= dateFrom && r.date <= dateTo);
+      const stats = {
+        total: filtered.length,
+        hadir: filtered.filter(r => r.status === 'hadir').length,
+        izin: filtered.filter(r => r.status === 'izin').length,
+        sakit: filtered.filter(r => r.status === 'sakit').length,
+        bolos: filtered.filter(r => r.status === 'bolos').length,
+        alpa: filtered.filter(r => r.status === 'alpa').length
+      };
+
+      document.getElementById('export-stat-total').textContent = stats.total;
+      document.getElementById('export-stat-hadir').textContent = stats.hadir;
+      document.getElementById('export-stat-izin').textContent = stats.izin;
+      document.getElementById('export-stat-sakit').textContent = stats.sakit;
+      document.getElementById('export-stat-bolos').textContent = stats.bolos;
+      document.getElementById('export-stat-alpa').textContent = stats.alpa;
+    }
+
+    function updateAttendanceStats() {
+      const statuses = Object.values(tempAbsenceData);
+      const stats = {
+        total: statuses.length,
+        hadir: statuses.filter(s => s === 'hadir').length,
+        izin: statuses.filter(s => s === 'izin').length,
+        sakit: statuses.filter(s => s === 'sakit').length,
+        bolos: statuses.filter(s => s === 'bolos').length,
+        alpa: statuses.filter(s => s === 'alpa').length
+      };
+
+      document.getElementById('stat-total').textContent = stats.total;
+      document.getElementById('stat-hadir').textContent = stats.hadir;
+      document.getElementById('stat-izin').textContent = stats.izin;
+      document.getElementById('stat-sakit').textContent = stats.sakit;
+      document.getElementById('stat-bolos').textContent = stats.bolos;
+      document.getElementById('stat-alpa').textContent = stats.alpa;
+    }
+
+    function updateRecapStats(data) {
+      const stats = {
+        total: data.length,
+        hadir: data.filter(r => r.status === 'hadir').length,
+        izin: data.filter(r => r.status === 'izin').length,
+        sakit: data.filter(r => r.status === 'sakit').length,
+        bolos: data.filter(r => r.status === 'bolos').length,
+        alpa: data.filter(r => r.status === 'alpa').length
+      };
+
+      document.getElementById('recap-stat-total').textContent = stats.total;
+      document.getElementById('recap-stat-hadir').textContent = stats.hadir;
+      document.getElementById('recap-stat-izin').textContent = stats.izin;
+      document.getElementById('recap-stat-sakit').textContent = stats.sakit;
+      document.getElementById('recap-stat-bolos').textContent = stats.bolos;
+      document.getElementById('recap-stat-alpa').textContent = stats.alpa;
+    }
+
+    // =====================
+    // Schedule Management
+    // =====================
+    function initSchedule() {
+      const dateInput = document.getElementById('schedule-date');
+      const hourSelect = document.getElementById('schedule-hour');
+
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      dateInput.value = `${yyyy}-${mm}-${dd}`;
+
+      updateHourOptions();
+      updateScheduleDisplay();
+
+      dateInput.addEventListener('change', () => {
+        updateHourOptions();
+        updateScheduleDisplay();
+        hourSelect.value = '';
+        currentHour = null;
+        tempAbsenceData = {};
+        renderAttendanceStudents();
+      });
+
+      hourSelect.addEventListener('change', () => {
+        currentHour = hourSelect.value || null;
+        updateScheduleDisplay();
+        
+        if (currentHour && currentDate) {
+          const prevHour = String(parseInt(currentHour) - 1);
+          tempAbsenceData = {};
+          
+          const prevJamRecords = attendanceRecords.filter(r => r.date === currentDate && r.jam === prevHour);
+          prevJamRecords.forEach(record => {
+            tempAbsenceData[record.nisn] = record.status;
+          });
+        } else {
+          tempAbsenceData = {};
+        }
+        
+        renderAttendanceStudents();
+      });
+    }
+
+    function updateHourOptions() {
+      const dateInput = document.getElementById('schedule-date');
+      const hourSelect = document.getElementById('schedule-hour');
+
+      if (!dateInput.value) {
+        hourSelect.innerHTML = '<option value="">-- Pilih Jam --</option>';
+        return;
+      }
+
+      const date = new Date(dateInput.value);
+      const day = date.getDay();
+      let maxJam = 8;
+
+      const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      const dayName = dayNames[day];
+
+      if (day === 0) maxJam = 0;
+      else if (day === 1) maxJam = 9;
+      else if (day === 5) maxJam = 6;
+      else maxJam = 8;
+
+      let html = `<option value="">-- Pilih Jam (${dayName}) --</option>`;
+      if (maxJam === 0) {
+        html = '<option value="">Libur (Hari Minggu)</option>';
+      } else {
+        for (let i = 1; i <= maxJam; i++) {
+          const isLocked = isJamSubmitted(dateInput.value, String(i));
+          const lockText = isLocked ? ' 🔒 (Sudah Dikirim)' : '';
+          const disabledAttr = isLocked ? ' disabled' : '';
+          html += `<option value="${i}"${disabledAttr}>Jam ${i}${lockText}</option>`;
+        }
+      }
+
+      hourSelect.innerHTML = html;
+    }
+
+    function updateScheduleDisplay() {
+      const dateInput = document.getElementById('schedule-date');
+      const hourSelect = document.getElementById('schedule-hour');
+
+      if (dateInput.value) {
+        currentDate = dateInput.value;
+        const date = new Date(dateInput.value);
+        const dateStr = date.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('display-date').textContent = dateStr;
+      }
+
+      if (hourSelect.value) {
+        currentHour = hourSelect.value;
+        document.getElementById('display-hour').textContent = `Jam ${hourSelect.value}`;
+      } else {
+        document.getElementById('display-hour').textContent = '-';
+      }
+    }
+
+    // =====================
+    // Export Functions
+    // =====================
+    function exportToCSV() {
+      const dateFrom = document.getElementById('export-from-date').value;
+      const dateTo = document.getElementById('export-to-date').value;
+
+      if (!dateFrom || !dateTo) {
+        alert('Pilih rentang tanggal terlebih dahulu');
+        return;
+      }
+
+      const filtered = attendanceRecords.filter(r => r.date >= dateFrom && r.date <= dateTo);
+      
+      if (filtered.length === 0) {
+        alert('Tidak ada data untuk diekspor');
+        return;
+      }
+
+      let csv = 'No,Nama Siswa,NISN,Tanggal,Jam,Status\n';
+      
+      filtered.forEach((record, idx) => {
+        const date = new Date(record.date);
+        const dateStr = date.toLocaleDateString('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit' });
+        csv += `${idx + 1},"${record.student_name}",${record.nisn},${dateStr},Jam ${record.jam},${record.status}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `absensi_${dateFrom}_${dateTo}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function exportToPDF() {
+      const dateFrom = document.getElementById('export-from-date').value;
+      const dateTo = document.getElementById('export-to-date').value;
+
+      if (!dateFrom || !dateTo) {
+        alert('Pilih rentang tanggal terlebih dahulu');
+        return;
+      }
+
+      const filtered = attendanceRecords.filter(r => r.date >= dateFrom && r.date <= dateTo);
+      
+      if (filtered.length === 0) {
+        alert('Tidak ada data untuk diekspor');
+        return;
+      }
+
+      let html = `
+        <html>
+        <head>
+          <title>Laporan Absensi</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            h1 { text-align: center; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+            th { background-color: #667eea; color: white; }
+            tr:nth-child(even) { background-color: #f9f9f9; }
+          </style>
+        </head>
+        <body>
+          <h1>Laporan Absensi Siswa</h1>
+          <p>Periode: ${dateFrom} s/d ${dateTo}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Siswa</th>
+                <th>NISN</th>
+                <th>Tanggal</th>
+                <th>Jam</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+
+      filtered.forEach((record, idx) => {
+        const date = new Date(record.date);
+        const dateStr = date.toLocaleDateString('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit' });
+        html += `
+              <tr>
+                <td>${idx + 1}</td>
+                <td>${record.student_name}</td>
+                <td>${record.nisn}</td>
+                <td>${dateStr}</td>
+                <td>Jam ${record.jam}</td>
+                <td>${record.status}</td>
+              </tr>
+        `;
+      });
+
+      html += `
+            </tbody>
+          </table>
+        </body>
+        </html>
+      `;
+
+      const printWindow = window.open('', '', 'height=600,width=800');
+      printWindow.document.write(html);
+      printWindow.document.close();
+      printWindow.print();
+    }
+
+    // =====================
+    // Page Navigation
+    // =====================
+    function showPage(pageName) {
+      document.getElementById('page-home').classList.add('hidden');
+      document.getElementById('page-absensi').classList.add('hidden');
+      document.getElementById('page-edit').classList.add('hidden');
+      document.getElementById('page-rekapan').classList.add('hidden');
+      document.getElementById('page-export').classList.add('hidden');
+
+      const pageId = `page-${pageName}`;
+      if (document.getElementById(pageId)) {
+        document.getElementById(pageId).classList.remove('hidden');
+      }
+
+      document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`[data-page="${pageName}"]`).classList.add('active');
+
+      if (pageName === 'rekapan') {
+        renderRecapTable();
+      }
+
+      if (pageName === 'export') {
+        updateExportStats();
+      }
+    }
+
+    // =====================
+    // Event Listeners Setup
+    // =====================
+    function setupEventListeners() {
+      // Navigation
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.addEventListener('click', () => showPage(btn.dataset.page));
+      });
+
+      // Mark all as hadir
+      document.getElementById('btn-mark-all-hadir').addEventListener('click', () => {
+        if (!currentDate || !currentHour) {
+          alert('Pilih tanggal dan jam terlebih dahulu');
+          return;
+        }
+
+        allStudents.forEach(student => {
+          tempAbsenceData[student.nisn] = 'hadir';
+        });
+
+        renderAttendanceStudents();
+        updateAttendanceStats();
+      });
+
+      // Edit data
+      document.getElementById('btn-edit').addEventListener('click', () => {
+        const dateFrom = prompt('Masukkan tanggal (YYYY-MM-DD):', '');
+        if (!dateFrom) return;
+
+        const jamEdit = prompt('Masukkan jam (1-9):', '');
+        if (!jamEdit) return;
+
+        const recordsToEdit = attendanceRecords.filter(r => r.date === dateFrom && r.jam === jamEdit);
+        
+        if (recordsToEdit.length === 0) {
+          alert('❌ Tidak ada data untuk tanggal dan jam tersebut');
+          return;
+        }
+
+        tempAbsenceData = {};
+        recordsToEdit.forEach(record => {
+          tempAbsenceData[record.nisn] = record.status;
+        });
+
+        setEditMode(dateFrom, jamEdit);
+
+        currentDate = dateFrom;
+        currentHour = jamEdit;
+
+        document.getElementById('schedule-date').value = dateFrom;
+        document.getElementById('schedule-hour').value = jamEdit;
+        updateScheduleDisplay();
+        renderAttendanceStudents();
+        updateAttendanceStats();
+
+        alert('✓ Mode Edit Aktif!\n\nUbah status siswa jika diperlukan, lalu klik "📤 Kirim Absensi" untuk menyimpan perubahan');
+      });
+
+      // Submit attendance
+      document.getElementById('btn-submit').addEventListener('click', async () => {
+        if (!currentDate || !currentHour) {
+          alert('Pilih tanggal dan jam terlebih dahulu');
+          return;
+        }
+
+        if (!isEditMode && isJamSubmitted(currentDate, currentHour)) {
+          alert('⚠️ Jam ini sudah dikirim sebelumnya.\n\nUntuk mengubah data, klik tombol "✏️ Edit Data"');
+          return;
+        }
+
+        if (Object.keys(tempAbsenceData).length === 0) {
+          alert('Pilih status absensi untuk minimal satu siswa');
+          return;
+        }
+
+        const btn = document.getElementById('btn-submit');
+        btn.disabled = true;
+        btn.textContent = '⏳ Mengirim...';
+
+        try {
+          if (isEditMode) {
+            const oldRecords = attendanceRecords.filter(r => r.date === editedDate && r.jam === editedJam);
+            for (const record of oldRecords) {
+              await window.dataSdk.delete(record);
+            }
+          }
+
+          for (const nisn in tempAbsenceData) {
+            const student = studentsByNisn[nisn];
+            if (!student) continue;
+
+            const result = await window.dataSdk.create({
+              student_name: student.name,
+              nisn: student.nisn,
+              date: currentDate,
+              jam: currentHour,
+              status: tempAbsenceData[nisn],
+              time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+            });
+
+            if (result.isError) {
+              console.error('Error:', result.error);
+            }
+          }
+
+          alert(isEditMode ? '✓ Data absensi berhasil diperbarui!' : '✓ Absensi berhasil dikirim!');
+          clearEditMode();
+          tempAbsenceData = {};
+          document.getElementById('schedule-date').value = '';
+          document.getElementById('schedule-hour').value = '';
+          currentDate = null;
+          currentHour = null;
+          updateScheduleDisplay();
+          updateHourOptions();
+          renderAttendanceStudents();
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '📤 Kirim Absensi';
+        }
+      });
+
+      // Filter recap
+      document.getElementById('btn-filter').addEventListener('click', renderRecapTable);
+
+      // Export buttons
+      document.getElementById('btn-export-csv').addEventListener('click', exportToCSV);
+      document.getElementById('btn-export-pdf').addEventListener('click', exportToPDF);
+
+      // Export date shortcuts
+      document.getElementById('btn-set-today').addEventListener('click', () => {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const dateStr = `${yyyy}-${mm}-${dd}`;
+        
+        document.getElementById('export-from-date').value = dateStr;
+        document.getElementById('export-to-date').value = dateStr;
+        updateExportStats();
+      });
+
+      document.getElementById('btn-set-week').addEventListener('click', () => {
+        const today = new Date();
+        const first = today.getDate() - today.getDay() + 1;
+        const firstDay = new Date(today.setDate(first));
+        const lastDay = new Date(today.setDate(today.getDate() + 6));
+
+        const formatDate = (date) => {
+          const yyyy = date.getFullYear();
+          const mm = String(date.getMonth() + 1).padStart(2, '0');
+          const dd = String(date.getDate()).padStart(2, '0');
+          return `${yyyy}-${mm}-${dd}`;
+        };
+
+        document.getElementById('export-from-date').value = formatDate(firstDay);
+        document.getElementById('export-to-date').value = formatDate(lastDay);
+        updateExportStats();
+      });
+
+      // Export date change listeners
+      document.getElementById('export-from-date').addEventListener('change', updateExportStats);
+      document.getElementById('export-to-date').addEventListener('change', updateExportStats);
+
+      // Edit search listeners
+      let searchTimeout;
+      document.getElementById('edit-search-date').addEventListener('change', searchEditRecords);
+      document.getElementById('edit-search-hour').addEventListener('change', searchEditRecords);
+      document.getElementById('edit-search-student').addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(searchEditRecords, 100);
+      });
+
+      // Set default filter dates
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      const todayStr = `${yyyy}-${mm}-${dd}`;
+
+      document.getElementById('filter-from').value = todayStr;
+      document.getElementById('filter-to').value = todayStr;
+    }
+
+    function updateCurrentDate() {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('current-date').textContent = dateStr;
+    }
+
+    // =====================
+    // Data SDK Handler
+    // =====================
+    const dataHandler = {
+      onDataChanged(data) {
+        attendanceRecords = data || [];
+        updateSubmittedJams();
+        updateHourOptions();
+      }
+    };
+
+    async function onConfigChange(newConfig) {
+      config = { ...defaultConfig, ...newConfig };
+      document.getElementById('header-title').textContent = config.header_title;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([['header_title', config.header_title]]);
+    }
+
+    // =====================
+    // Initialize App
+    // =====================
+    async function initializeApp() {
+      updateCurrentDate();
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      }
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) console.error('Data SDK init failed');
+      }
+
+      await loadStudentData();
+      initSchedule();
+      setupEventListeners();
+      showPage('home');
+    }
+
+    initializeApp();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bd7c56c50f3ce31',t:'MTc2ODMzNzQ4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
