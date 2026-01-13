@@ -311,8 +311,8 @@
          </div>
         </div>
        </div>
-      </div><!-- Edit and Submit Buttons -->
-      <div class="flex justify-center gap-4"><button id="btn-edit" class="gradient-warning text-white font-bold py-4 px-12 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"> ✏️ Edit Data </button> <button id="btn-submit" class="gradient-primary text-white font-bold py-4 px-12 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"> 📤 Kirim Absensi </button>
+      </div><!-- Submit Button -->
+      <div class="flex justify-center"><button id="btn-submit" class="gradient-primary text-white font-bold py-4 px-12 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"> 📤 Kirim Absensi </button>
       </div>
      </div>
     </div><!-- Edit Page -->
@@ -1296,40 +1296,6 @@
         updateAttendanceStats();
       });
 
-      // Edit data
-      document.getElementById('btn-edit').addEventListener('click', () => {
-        const dateFrom = prompt('Masukkan tanggal (YYYY-MM-DD):', '');
-        if (!dateFrom) return;
-
-        const jamEdit = prompt('Masukkan jam (1-9):', '');
-        if (!jamEdit) return;
-
-        const recordsToEdit = attendanceRecords.filter(r => r.date === dateFrom && r.jam === jamEdit);
-        
-        if (recordsToEdit.length === 0) {
-          alert('❌ Tidak ada data untuk tanggal dan jam tersebut');
-          return;
-        }
-
-        tempAbsenceData = {};
-        recordsToEdit.forEach(record => {
-          tempAbsenceData[record.nisn] = record.status;
-        });
-
-        setEditMode(dateFrom, jamEdit);
-
-        currentDate = dateFrom;
-        currentHour = jamEdit;
-
-        document.getElementById('schedule-date').value = dateFrom;
-        document.getElementById('schedule-hour').value = jamEdit;
-        updateScheduleDisplay();
-        renderAttendanceStudents();
-        updateAttendanceStats();
-
-        alert('✓ Mode Edit Aktif!\n\nUbah status siswa jika diperlukan, lalu klik "📤 Kirim Absensi" untuk menyimpan perubahan');
-      });
-
       // Submit attendance
       document.getElementById('btn-submit').addEventListener('click', async () => {
         if (!currentDate || !currentHour) {
@@ -1518,5 +1484,5 @@
 
     initializeApp();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bd7c56c50f3ce31',t:'MTc2ODMzNzQ4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bd7c9d3c7c5ce31',t:'MTc2ODMzNzY2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
