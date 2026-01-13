@@ -190,6 +190,104 @@
         opacity: 1;
       }
     }
+
+    /* Dark Mode Styles */
+    body.dark-mode {
+      background: linear-gradient(to br, #111827 0%, #1f2937 50%, #111827 100%) !important;
+    }
+
+    body.dark-mode #app {
+      background: #0f172a;
+    }
+
+    body.dark-mode main {
+      background: #0f172a !important;
+    }
+
+    body.dark-mode .card-elevated {
+      background: rgba(30, 41, 59, 0.95) !important;
+      border-color: rgba(100, 116, 139, 0.3) !important;
+      color: #e2e8f0;
+    }
+
+    body.dark-mode .card-elevated p,
+    body.dark-mode .card-elevated span,
+    body.dark-mode .card-elevated label {
+      color: #cbd5e1;
+    }
+
+    body.dark-mode .card-elevated .text-gray-700,
+    body.dark-mode .card-elevated .text-gray-800 {
+      color: #f1f5f9 !important;
+    }
+
+    body.dark-mode .card-elevated .text-gray-600,
+    body.dark-mode .card-elevated .text-gray-500 {
+      color: #cbd5e1 !important;
+    }
+
+    body.dark-mode .student-item {
+      background: rgba(30, 41, 59, 0.7) !important;
+      border-left-color: #667eea !important;
+    }
+
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode textarea {
+      background: #1e293b !important;
+      color: #f1f5f9 !important;
+      border-color: #475569 !important;
+    }
+
+    body.dark-mode input:focus,
+    body.dark-mode select:focus,
+    body.dark-mode textarea:focus {
+      border-color: #667eea !important;
+      background: #0f172a !important;
+    }
+
+    body.dark-mode .bg-gray-50 {
+      background: #1e293b !important;
+      border-color: #475569 !important;
+    }
+
+    body.dark-mode .bg-blue-50,
+    body.dark-mode .bg-green-50,
+    body.dark-mode .bg-purple-50,
+    body.dark-mode .bg-orange-50,
+    body.dark-mode .bg-amber-50 {
+      background: rgba(71, 85, 105, 0.3) !important;
+    }
+
+    body.dark-mode table {
+      color: #cbd5e1;
+    }
+
+    body.dark-mode tbody tr {
+      border-color: #334155 !important;
+    }
+
+    body.dark-mode tbody tr:hover {
+      background: rgba(102, 126, 234, 0.1) !important;
+    }
+
+    body.dark-mode .status-badge {
+      background-color: rgba(0, 0, 0, 0.3) !important;
+    }
+
+    body.dark-mode button.btn-status {
+      background: #1e293b !important;
+      color: #cbd5e1 !important;
+      border-color: #475569 !important;
+    }
+
+    body.dark-mode button.btn-status:hover {
+      border-color: #667eea !important;
+    }
+
+    body.dark-mode .loading-spinner {
+      border-color: rgba(102, 126, 234, 0.2) !important;
+    }
   </style>
   <style>@view-transition { navigation: auto; }</style>
  </head>
@@ -197,9 +295,15 @@
   <div id="app" class="w-full h-full flex flex-col"><!-- Header -->
    <header class="gradient-primary shadow-lg flex-shrink-0">
     <div class="w-full px-4 py-6 text-white">
-     <div class="max-w-7xl mx-auto">
-      <h1 id="header-title" class="text-3xl font-bold">Sistem Absensi Siswa</h1>
-      <p id="current-date" class="text-purple-100 mt-1 text-sm"></p>
+     <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div>
+       <h1 id="header-title" class="text-3xl font-bold">Absensi XII-A2</h1>
+       <p id="current-date" class="text-purple-100 mt-1 text-sm"></p>
+      </div>
+      <div class="text-right">
+       <p id="current-time" class="text-5xl font-bold font-mono tracking-wider" style="text-shadow: 0 2px 8px rgba(0,0,0,0.2);">00:00:00</p>
+       <p class="text-purple-100 mt-2 text-sm font-semibold">Waktu Sekarang</p>
+      </div>
      </div>
     </div>
    </header><!-- Main Content -->
@@ -246,9 +350,13 @@
        </div>
       </div><!-- Attendance Input Card -->
       <div class="card-elevated rounded-2xl p-6">
-       <div class="flex items-center gap-3 mb-5 flex-wrap">
-        <div class="w-1 h-8 bg-gradient-primary rounded-full"></div>
-        <h2 class="text-2xl font-bold text-gray-800">Input Absensi</h2><span id="absensi-student-count" class="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">0 siswa</span> <button id="btn-mark-all-hadir" class="ml-auto bg-gradient-success text-white font-bold py-4 px-8 rounded-lg hover:shadow-xl transition-all text-lg transform hover:scale-110 hover:bg-gradient-to-r hover:from-green-600 hover:to-emerald-600"> ✓ Hadir Semua </button>
+       <div class="flex items-center justify-between gap-3 mb-5">
+        <div class="flex items-center gap-3">
+         <div class="w-1 h-8 bg-gradient-primary rounded-full"></div>
+         <h2 class="text-2xl font-bold text-gray-800">Input Absensi</h2>
+        </div><span id="absensi-student-count" class="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">0 siswa</span>
+       </div>
+       <div class="mb-5"><button id="btn-mark-all-hadir" class="w-full bg-gradient-success text-white font-bold py-4 px-8 rounded-lg hover:shadow-xl transition-all text-lg transform hover:scale-105 hover:bg-gradient-to-r hover:from-green-600 hover:to-emerald-600"> ✓ Hadir Semua </button>
        </div>
        <div id="absensi-students-container" class="space-y-3 max-h-[500px] overflow-y-auto pr-2">
         <div class="flex items-center justify-center py-12 text-gray-500">
@@ -317,18 +425,28 @@
      </div>
     </div><!-- Edit Page -->
     <div id="page-edit" class="hidden w-full px-4 py-6 page-transition">
-     <div class="max-w-6xl mx-auto space-y-6"><!-- Search & Filter Card -->
+     <div class="max-w-6xl mx-auto space-y-6"><!-- Edit Schedule Settings Card -->
       <div class="card-elevated rounded-2xl p-6">
        <div class="flex items-center gap-3 mb-5">
         <div class="w-1 h-8 bg-gradient-warning rounded-full"></div>
-        <h2 class="text-2xl font-bold text-gray-800">Cari Data Absensi untuk Diedit</h2>
+        <h2 class="text-2xl font-bold text-gray-800">Pengaturan Jadwal Edit</h2>
        </div>
-       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div><label for="edit-search-date" class="block text-sm font-semibold text-gray-700 mb-2">Tanggal</label> <input type="date" id="edit-search-date" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white font-medium">
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div><label for="edit-schedule-date" class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Absensi</label> <input type="date" id="edit-schedule-date" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white font-medium">
         </div>
-        <div><label for="edit-search-hour" class="block text-sm font-semibold text-gray-700 mb-2">Jam Pembelajaran</label> <select id="edit-search-hour" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white font-medium"> <option value="">-- Semua Jam --</option> <option value="1">Jam 1</option> <option value="2">Jam 2</option> <option value="3">Jam 3</option> <option value="4">Jam 4</option> <option value="5">Jam 5</option> <option value="6">Jam 6</option> <option value="7">Jam 7</option> <option value="8">Jam 8</option> <option value="9">Jam 9</option> </select>
+        <div><label for="edit-schedule-hour" class="block text-sm font-semibold text-gray-700 mb-2">Jam Pembelajaran</label> <select id="edit-schedule-hour" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white font-medium"> <option value="">-- Pilih Jam --</option> </select>
         </div>
-        <div><label for="edit-search-student" class="block text-sm font-semibold text-gray-700 mb-2">Nama/NISN Siswa</label> <input type="text" id="edit-search-student" placeholder="Cari nama atau NISN..." class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all bg-white font-medium">
+       </div>
+       <div class="mt-5 p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border-l-4 border-orange-500">
+        <div class="grid grid-cols-2 gap-4">
+         <div>
+          <p class="text-xs text-gray-600 font-semibold uppercase tracking-wider">Tanggal</p>
+          <p id="edit-display-date" class="text-lg font-bold text-gray-800 mt-1">-</p>
+         </div>
+         <div>
+          <p class="text-xs text-gray-600 font-semibold uppercase tracking-wider">Jam</p>
+          <p id="edit-display-hour" class="text-lg font-bold text-gray-800 mt-1">-</p>
+         </div>
         </div>
        </div>
       </div><!-- Edit Results Card -->
@@ -358,7 +476,7 @@
          </div>
          <div><label for="filter-to" class="block text-sm font-semibold text-gray-700 mb-2">Sampai Tanggal</label> <input type="date" id="filter-to" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500">
          </div>
-         <div class="flex items-end"><button id="btn-filter" class="w-full gradient-primary text-white font-bold py-2 px-6 rounded-lg hover:shadow-lg transition-all"> 🔍 Filter </button>
+         <div class="flex items-end"><button id="btn-filter" class="w-full gradient-primary text-white font-bold py-2 px-6 rounded-lg hover:shadow-lg transition-all"> ����� Filter </button>
          </div>
         </div>
        </div><!-- Table -->
@@ -433,96 +551,159 @@
        </div>
       </div>
      </div>
-    </div><!-- Export Page -->
-    <div id="page-export" class="hidden w-full px-4 py-6 page-transition">
-     <div class="max-w-6xl mx-auto">
+    </div><!-- Profil Page -->
+    <div id="page-profil" class="hidden w-full px-4 py-6 page-transition">
+     <div class="max-w-6xl mx-auto"><!-- Profile Header Card -->
+      <div class="card-elevated rounded-2xl p-8 mb-6">
+       <div class="flex items-center gap-6 mb-8 flex-wrap">
+        <div class="w-24 h-24 rounded-full bg-gradient-primary flex items-center justify-center text-white text-5xl font-bold flex-shrink-0 shadow-lg">
+         👤
+        </div>
+        <div class="flex-1">
+         <h1 class="text-4xl font-bold text-gray-800 mb-2">Profil Aplikasi</h1>
+         <p class="text-gray-600 text-lg">Absensi XII-A2</p>
+         <p class="text-sm text-gray-500 mt-2">Sistem Manajemen Absensi Siswa Modern</p>
+        </div>
+       </div><!-- Info General -->
+       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 pt-8 border-t-2 border-gray-200">
+        <div class="text-center">
+         <div class="text-4xl font-bold text-gradient-primary mb-2" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" id="profile-total-siswa">
+          0
+         </div>
+         <p class="text-gray-600 font-semibold">Total Siswa</p>
+        </div>
+        <div class="text-center">
+         <div class="text-4xl font-bold text-gradient-success mb-2" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" id="profile-total-absensi">
+          0
+         </div>
+         <p class="text-gray-600 font-semibold">Data Absensi</p>
+        </div>
+        <div class="text-center">
+         <div class="text-4xl font-bold text-gradient-warning mb-2" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" id="profile-created-date">
+          -
+         </div>
+         <p class="text-gray-600 font-semibold">Tanggal Dibuat</p>
+        </div>
+       </div>
+      </div><!-- Statistics Card -->
+      <div class="card-elevated rounded-2xl p-6 mb-6">
+       <div class="flex items-center gap-3 mb-6">
+        <div class="w-1 h-8 bg-gradient-info rounded-full"></div>
+        <h2 class="text-2xl font-bold text-gray-800">📊 Statistik Keseluruhan</h2>
+       </div>
+       <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-gray-300">
+         <div class="text-3xl font-bold text-gray-700 mb-1" id="profile-stat-total">
+          0
+         </div>
+         <div class="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+          Total
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-green-500">
+         <div class="text-3xl font-bold text-green-600 mb-1" id="profile-stat-hadir">
+          0
+         </div>
+         <div class="text-xs font-semibold text-green-700 uppercase tracking-wide">
+          Hadir
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-blue-500">
+         <div class="text-3xl font-bold text-blue-600 mb-1" id="profile-stat-izin">
+          0
+         </div>
+         <div class="text-xs font-semibold text-blue-700 uppercase tracking-wide">
+          Izin
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-amber-500">
+         <div class="text-3xl font-bold text-amber-600 mb-1" id="profile-stat-sakit">
+          0
+         </div>
+         <div class="text-xs font-semibold text-amber-700 uppercase tracking-wide">
+          Sakit
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-purple-500">
+         <div class="text-3xl font-bold text-purple-600 mb-1" id="profile-stat-bolos">
+          0
+         </div>
+         <div class="text-xs font-semibold text-purple-700 uppercase tracking-wide">
+          Bolos
+         </div>
+        </div>
+        <div class="card-elevated rounded-lg p-4 text-center border-t-4 border-red-500">
+         <div class="text-3xl font-bold text-red-600 mb-1" id="profile-stat-alpa">
+          0
+         </div>
+         <div class="text-xs font-semibold text-red-700 uppercase tracking-wide">
+          Alpa
+         </div>
+        </div>
+       </div>
+      </div><!-- Settings Card -->
+      <div class="card-elevated rounded-2xl p-6 mb-6">
+       <div class="flex items-center gap-3 mb-6">
+        <div class="w-1 h-8 bg-gradient-warning rounded-full"></div>
+        <h2 class="text-2xl font-bold text-gray-800">⚙️ Pengaturan</h2>
+       </div>
+       <div class="space-y-4">
+        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">
+         <div>
+          <p class="font-semibold text-gray-800">🔔 Notifikasi</p>
+          <p class="text-sm text-gray-600">Aktifkan notifikasi untuk pengingat absensi</p>
+         </div>
+         <div class="w-14 h-8 bg-gradient-success rounded-full flex items-center p-1 cursor-pointer toggle-switch" data-setting="notifications">
+          <div class="w-6 h-6 bg-white rounded-full shadow-lg transform transition-transform translate-x-6"></div>
+         </div>
+        </div>
+        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border-l-4 border-purple-500">
+         <div>
+          <p class="font-semibold text-gray-800">🌙 Mode Gelap</p>
+          <p class="text-sm text-gray-600">Ubah tampilan aplikasi ke mode gelap</p>
+         </div>
+         <div class="w-14 h-8 bg-gray-300 rounded-full flex items-center p-1 cursor-pointer toggle-switch" data-setting="darkmode">
+          <div class="w-6 h-6 bg-white rounded-full shadow-lg transform transition-transform"></div>
+         </div>
+        </div>
+        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border-l-4 border-green-500">
+         <div>
+          <p class="font-semibold text-gray-800">🔄 Sinkronisasi Otomatis</p>
+          <p class="text-sm text-gray-600">Sinkronisasi data secara otomatis setiap jam</p>
+         </div>
+         <div class="w-14 h-8 bg-gradient-success rounded-full flex items-center p-1 cursor-pointer toggle-switch" data-setting="autosync">
+          <div class="w-6 h-6 bg-white rounded-full shadow-lg transform transition-transform translate-x-6"></div>
+         </div>
+        </div>
+       </div>
+      </div><!-- About Card -->
       <div class="card-elevated rounded-2xl p-6">
        <div class="flex items-center gap-3 mb-6">
-        <div class="w-1 h-8 bg-gradient-success rounded-full"></div>
-        <h2 class="text-2xl font-bold text-gray-800">Export Data Absensi</h2>
-       </div><!-- Export Options -->
-       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"><!-- Export as CSV -->
-        <div class="card-elevated rounded-xl p-6 border-2 border-blue-200 hover:border-blue-500 hover:shadow-lg transition-all">
-         <div class="flex items-center gap-4 mb-4">
-          <div class="w-12 h-12 rounded-lg bg-gradient-info flex items-center justify-center text-white text-2xl">
-           📄
-          </div>
-          <h3 class="text-lg font-bold text-gray-800">Export ke CSV</h3>
-         </div>
-         <p class="text-sm text-gray-600 mb-4">Download data absensi dalam format CSV yang dapat dibuka di Excel</p><button class="w-full gradient-info text-white font-bold py-3 px-4 rounded-lg hover:shadow-lg transition-all" id="btn-export-csv"> 📥 Download CSV </button>
-        </div><!-- Export as PDF -->
-        <div class="card-elevated rounded-xl p-6 border-2 border-red-200 hover:border-red-500 hover:shadow-lg transition-all">
-         <div class="flex items-center gap-4 mb-4">
-          <div class="w-12 h-12 rounded-lg bg-gradient-danger flex items-center justify-center text-white text-2xl">
-           📋
-          </div>
-          <h3 class="text-lg font-bold text-gray-800">Export ke PDF</h3>
-         </div>
-         <p class="text-sm text-gray-600 mb-4">Download laporan absensi dalam format PDF yang profesional dan siap cetak</p><button class="w-full gradient-danger text-white font-bold py-3 px-4 rounded-lg hover:shadow-lg transition-all" id="btn-export-pdf"> 📥 Download PDF </button>
+        <div class="w-1 h-8 bg-gradient-info rounded-full"></div>
+        <h2 class="text-2xl font-bold text-gray-800">ℹ️ Tentang Aplikasi</h2>
+       </div>
+       <div class="space-y-4 text-gray-700">
+        <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+         <p class="font-semibold mb-2">📱 Versi Aplikasi</p>
+         <p class="text-sm">v1.0.0 - Rilis Pertama</p>
         </div>
-       </div><!-- Filter for Export -->
-       <div class="bg-gray-50 rounded-lg border border-gray-200 p-6 mb-6">
-        <h3 class="text-lg font-bold text-gray-800 mb-4">⚙️ Pengaturan Export</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-         <div><label for="export-from-date" class="block text-sm font-semibold text-gray-700 mb-2">Dari Tanggal</label> <input type="date" id="export-from-date" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500">
-         </div>
-         <div><label for="export-to-date" class="block text-sm font-semibold text-gray-700 mb-2">Sampai Tanggal</label> <input type="date" id="export-to-date" class="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500">
-         </div>
-         <div class="flex items-end gap-2"><button id="btn-set-today" class="flex-1 bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600 transition-all text-sm"> 📅 Hari Ini </button> <button id="btn-set-week" class="flex-1 bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600 transition-all text-sm"> 📆 Minggu </button>
-         </div>
+        <div class="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+         <p class="font-semibold mb-2">✨ Fitur Utama</p>
+         <ul class="text-sm space-y-1 list-disc list-inside">
+          <li>Input Absensi Real-time</li>
+          <li>Edit Data Absensi</li>
+          <li>Rekapan Absensi</li>
+          <li>Export Data CSV/PDF</li>
+          <li>Statistik Lengkap</li>
+         </ul>
         </div>
-       </div><!-- Data Summary -->
-       <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border-l-4 border-green-500">
-        <h3 class="text-lg font-bold text-gray-800 mb-4">📊 Ringkasan Data untuk Export</h3>
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
-         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
-          <div class="text-2xl font-bold text-gray-700" id="export-stat-total">
-           0
-          </div>
-          <div class="text-xs font-semibold text-gray-600 uppercase">
-           Total
-          </div>
-         </div>
-         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
-          <div class="text-2xl font-bold text-green-600" id="export-stat-hadir">
-           0
-          </div>
-          <div class="text-xs font-semibold text-green-700 uppercase">
-           Hadir
-          </div>
-         </div>
-         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
-          <div class="text-2xl font-bold text-blue-600" id="export-stat-izin">
-           0
-          </div>
-          <div class="text-xs font-semibold text-blue-700 uppercase">
-           Izin
-          </div>
-         </div>
-         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
-          <div class="text-2xl font-bold text-amber-600" id="export-stat-sakit">
-           0
-          </div>
-          <div class="text-xs font-semibold text-amber-700 uppercase">
-           Sakit
-          </div>
-         </div>
-         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
-          <div class="text-2xl font-bold text-purple-600" id="export-stat-bolos">
-           0
-          </div>
-          <div class="text-xs font-semibold text-purple-700 uppercase">
-           Bolos
-          </div>
-         </div>
-         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
-          <div class="text-2xl font-bold text-red-600" id="export-stat-alpa">
-           0
-          </div>
-          <div class="text-xs font-semibold text-red-700 uppercase">
-           Alpa
-          </div>
-         </div>
+        <div class="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+         <p class="font-semibold mb-2">🎯 Tujuan</p>
+         <p class="text-sm">Memudahkan guru dalam mencatat dan mengelola absensi siswa secara digital dengan antarmuka yang user-friendly dan fitur-fitur lengkap.</p>
+        </div>
+        <div class="p-4 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+         <p class="font-semibold mb-2">📧 Dukungan</p>
+         <p class="text-sm">Untuk pertanyaan atau laporan bug, silakan hubungi administrator sistem.</p>
         </div>
        </div>
       </div>
@@ -531,7 +712,7 @@
    </main><!-- Bottom Navigation with 5 Items -->
    <footer class="gradient-primary shadow-xl flex-shrink-0">
     <div class="w-full px-4">
-     <div class="max-w-7xl mx-auto flex justify-center gap-2 md:gap-4"><button class="nav-item active" data-page="home"> <span class="text-2xl">🏠</span> <span class="text-xs font-semibold">Home</span> </button> <button class="nav-item" data-page="absensi"> <span class="text-2xl">📋</span> <span class="text-xs font-semibold">Absensi</span> </button> <button class="nav-item" data-page="edit"> <span class="text-2xl">✏️</span> <span class="text-xs font-semibold">Edit</span> </button> <button class="nav-item" data-page="rekapan"> <span class="text-2xl">📊</span> <span class="text-xs font-semibold">Rekapan</span> </button> <button class="nav-item" data-page="export"> <span class="text-2xl">📥</span> <span class="text-xs font-semibold">Export</span> </button>
+     <div class="max-w-7xl mx-auto flex justify-center gap-2 md:gap-4"><button class="nav-item active" data-page="home"> <span class="text-2xl">🏠</span> <span class="text-xs font-semibold">Home</span> </button> <button class="nav-item" data-page="absensi"> <span class="text-2xl">📋</span> <span class="text-xs font-semibold">Absensi</span> </button> <button class="nav-item" data-page="edit"> <span class="text-2xl">✏️</span> <span class="text-xs font-semibold">Edit</span> </button> <button class="nav-item" data-page="rekapan"> <span class="text-2xl">📊</span> <span class="text-xs font-semibold">Rekapan</span> </button> <button class="nav-item" data-page="profil"> <span class="text-2xl">👤</span> <span class="text-xs font-semibold">Profil</span> </button>
      </div>
     </div>
    </footer>
@@ -541,7 +722,7 @@
     // Configuration & State
     // =====================
     const defaultConfig = {
-      header_title: 'Sistem Absensi Siswa'
+      header_title: 'Absensi XII-A2'
     };
 
     let config = { ...defaultConfig };
@@ -697,6 +878,7 @@
 
         console.log('✓ Loaded students:', allStudents.length);
         renderAllStudents();
+        updateProfileStats();
       } catch (error) {
         console.error('Error loading CSV:', error);
         allStudents = [];
@@ -811,10 +993,92 @@
       updateAttendanceStats();
     }
 
+    let editCurrentDate = null;
+    let editCurrentHour = null;
+
+    function initEditSchedule() {
+      const dateInput = document.getElementById('edit-schedule-date');
+      const hourSelect = document.getElementById('edit-schedule-hour');
+
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      dateInput.value = `${yyyy}-${mm}-${dd}`;
+
+      updateEditHourOptions();
+      updateEditScheduleDisplay();
+
+      dateInput.addEventListener('change', () => {
+        updateEditHourOptions();
+        updateEditScheduleDisplay();
+        hourSelect.value = '';
+        editCurrentHour = null;
+        searchEditRecords();
+      });
+
+      hourSelect.addEventListener('change', () => {
+        editCurrentHour = hourSelect.value || null;
+        updateEditScheduleDisplay();
+        searchEditRecords();
+      });
+    }
+
+    function updateEditHourOptions() {
+      const dateInput = document.getElementById('edit-schedule-date');
+      const hourSelect = document.getElementById('edit-schedule-hour');
+
+      if (!dateInput.value) {
+        hourSelect.innerHTML = '<option value="">-- Pilih Jam --</option>';
+        return;
+      }
+
+      const date = new Date(dateInput.value);
+      const day = date.getDay();
+      let maxJam = 8;
+
+      const dayNames = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      const dayName = dayNames[day];
+
+      if (day === 0) maxJam = 0;
+      else if (day === 1) maxJam = 9;
+      else if (day === 5) maxJam = 6;
+      else maxJam = 8;
+
+      let html = `<option value="">-- Pilih Jam (${dayName}) --</option>`;
+      if (maxJam === 0) {
+        html = '<option value="">Libur (Hari Minggu)</option>';
+      } else {
+        for (let i = 1; i <= maxJam; i++) {
+          html += `<option value="${i}">Jam ${i}</option>`;
+        }
+      }
+
+      hourSelect.innerHTML = html;
+    }
+
+    function updateEditScheduleDisplay() {
+      const dateInput = document.getElementById('edit-schedule-date');
+      const hourSelect = document.getElementById('edit-schedule-hour');
+
+      if (dateInput.value) {
+        editCurrentDate = dateInput.value;
+        const date = new Date(dateInput.value);
+        const dateStr = date.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('edit-display-date').textContent = dateStr;
+      }
+
+      if (hourSelect.value) {
+        editCurrentHour = hourSelect.value;
+        document.getElementById('edit-display-hour').textContent = `Jam ${hourSelect.value}`;
+      } else {
+        document.getElementById('edit-display-hour').textContent = '-';
+      }
+    }
+
     function searchEditRecords() {
-      const dateVal = document.getElementById('edit-search-date').value;
-      const hourVal = document.getElementById('edit-search-hour').value;
-      const studentVal = document.getElementById('edit-search-student').value.toLowerCase();
+      const dateVal = editCurrentDate;
+      const hourVal = editCurrentHour;
 
       let filtered = attendanceRecords;
 
@@ -824,13 +1088,6 @@
 
       if (hourVal) {
         filtered = filtered.filter(r => r.jam === hourVal);
-      }
-
-      if (studentVal) {
-        filtered = filtered.filter(r =>
-          r.student_name.toLowerCase().includes(studentVal) ||
-          r.nisn.includes(studentVal)
-        );
       }
 
       renderEditResults(filtered);
@@ -944,7 +1201,7 @@
           bolos: 'status-badge bolos',
           alpa: 'status-badge alpa'
         };
-        const statusText = { hadir: '✓ Hadir', izin: '📋 Izin', sakit: '🏥 Sakit', bolos: '🚪 Bolos', alpa: '✗ Alpa' }[record.status];
+        const statusText = { hadir: '✓ Hadir', izin: '📋 Izin', sakit: '🏥 Sakit', bolos: '🚪 Bolos', alpa: '��� Alpa' }[record.status];
 
         const tr = document.createElement('tr');
         tr.className = 'border-b border-gray-200 hover:bg-purple-50 transition-colors';
@@ -962,38 +1219,6 @@
       tbody.innerHTML = '';
       tbody.appendChild(fragment);
       updateRecapStats(filtered);
-    }
-
-    function updateExportStats() {
-      const dateFrom = document.getElementById('export-from-date').value;
-      const dateTo = document.getElementById('export-to-date').value;
-
-      if (!dateFrom || !dateTo) {
-        document.getElementById('export-stat-total').textContent = '0';
-        document.getElementById('export-stat-hadir').textContent = '0';
-        document.getElementById('export-stat-izin').textContent = '0';
-        document.getElementById('export-stat-sakit').textContent = '0';
-        document.getElementById('export-stat-bolos').textContent = '0';
-        document.getElementById('export-stat-alpa').textContent = '0';
-        return;
-      }
-
-      const filtered = attendanceRecords.filter(r => r.date >= dateFrom && r.date <= dateTo);
-      const stats = {
-        total: filtered.length,
-        hadir: filtered.filter(r => r.status === 'hadir').length,
-        izin: filtered.filter(r => r.status === 'izin').length,
-        sakit: filtered.filter(r => r.status === 'sakit').length,
-        bolos: filtered.filter(r => r.status === 'bolos').length,
-        alpa: filtered.filter(r => r.status === 'alpa').length
-      };
-
-      document.getElementById('export-stat-total').textContent = stats.total;
-      document.getElementById('export-stat-hadir').textContent = stats.hadir;
-      document.getElementById('export-stat-izin').textContent = stats.izin;
-      document.getElementById('export-stat-sakit').textContent = stats.sakit;
-      document.getElementById('export-stat-bolos').textContent = stats.bolos;
-      document.getElementById('export-stat-alpa').textContent = stats.alpa;
     }
 
     function updateAttendanceStats() {
@@ -1031,6 +1256,26 @@
       document.getElementById('recap-stat-sakit').textContent = stats.sakit;
       document.getElementById('recap-stat-bolos').textContent = stats.bolos;
       document.getElementById('recap-stat-alpa').textContent = stats.alpa;
+    }
+
+    function updateProfileStats() {
+      const stats = {
+        total: attendanceRecords.length,
+        hadir: attendanceRecords.filter(r => r.status === 'hadir').length,
+        izin: attendanceRecords.filter(r => r.status === 'izin').length,
+        sakit: attendanceRecords.filter(r => r.status === 'sakit').length,
+        bolos: attendanceRecords.filter(r => r.status === 'bolos').length,
+        alpa: attendanceRecords.filter(r => r.status === 'alpa').length
+      };
+
+      document.getElementById('profile-total-siswa').textContent = allStudents.length;
+      document.getElementById('profile-total-absensi').textContent = stats.total;
+      document.getElementById('profile-stat-total').textContent = stats.total;
+      document.getElementById('profile-stat-hadir').textContent = stats.hadir;
+      document.getElementById('profile-stat-izin').textContent = stats.izin;
+      document.getElementById('profile-stat-sakit').textContent = stats.sakit;
+      document.getElementById('profile-stat-bolos').textContent = stats.bolos;
+      document.getElementById('profile-stat-alpa').textContent = stats.alpa;
     }
 
     // =====================
@@ -1134,118 +1379,6 @@
     }
 
     // =====================
-    // Export Functions
-    // =====================
-    function exportToCSV() {
-      const dateFrom = document.getElementById('export-from-date').value;
-      const dateTo = document.getElementById('export-to-date').value;
-
-      if (!dateFrom || !dateTo) {
-        alert('Pilih rentang tanggal terlebih dahulu');
-        return;
-      }
-
-      const filtered = attendanceRecords.filter(r => r.date >= dateFrom && r.date <= dateTo);
-      
-      if (filtered.length === 0) {
-        alert('Tidak ada data untuk diekspor');
-        return;
-      }
-
-      let csv = 'No,Nama Siswa,NISN,Tanggal,Jam,Status\n';
-      
-      filtered.forEach((record, idx) => {
-        const date = new Date(record.date);
-        const dateStr = date.toLocaleDateString('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit' });
-        csv += `${idx + 1},"${record.student_name}",${record.nisn},${dateStr},Jam ${record.jam},${record.status}\n`;
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', `absensi_${dateFrom}_${dateTo}.csv`);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    function exportToPDF() {
-      const dateFrom = document.getElementById('export-from-date').value;
-      const dateTo = document.getElementById('export-to-date').value;
-
-      if (!dateFrom || !dateTo) {
-        alert('Pilih rentang tanggal terlebih dahulu');
-        return;
-      }
-
-      const filtered = attendanceRecords.filter(r => r.date >= dateFrom && r.date <= dateTo);
-      
-      if (filtered.length === 0) {
-        alert('Tidak ada data untuk diekspor');
-        return;
-      }
-
-      let html = `
-        <html>
-        <head>
-          <title>Laporan Absensi</title>
-          <style>
-            body { font-family: Arial, sans-serif; margin: 20px; }
-            h1 { text-align: center; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-            th { background-color: #667eea; color: white; }
-            tr:nth-child(even) { background-color: #f9f9f9; }
-          </style>
-        </head>
-        <body>
-          <h1>Laporan Absensi Siswa</h1>
-          <p>Periode: ${dateFrom} s/d ${dateTo}</p>
-          <table>
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Nama Siswa</th>
-                <th>NISN</th>
-                <th>Tanggal</th>
-                <th>Jam</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-      `;
-
-      filtered.forEach((record, idx) => {
-        const date = new Date(record.date);
-        const dateStr = date.toLocaleDateString('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit' });
-        html += `
-              <tr>
-                <td>${idx + 1}</td>
-                <td>${record.student_name}</td>
-                <td>${record.nisn}</td>
-                <td>${dateStr}</td>
-                <td>Jam ${record.jam}</td>
-                <td>${record.status}</td>
-              </tr>
-        `;
-      });
-
-      html += `
-            </tbody>
-          </table>
-        </body>
-        </html>
-      `;
-
-      const printWindow = window.open('', '', 'height=600,width=800');
-      printWindow.document.write(html);
-      printWindow.document.close();
-      printWindow.print();
-    }
-
-    // =====================
     // Page Navigation
     // =====================
     function showPage(pageName) {
@@ -1253,7 +1386,7 @@
       document.getElementById('page-absensi').classList.add('hidden');
       document.getElementById('page-edit').classList.add('hidden');
       document.getElementById('page-rekapan').classList.add('hidden');
-      document.getElementById('page-export').classList.add('hidden');
+      document.getElementById('page-profil').classList.add('hidden');
 
       const pageId = `page-${pageName}`;
       if (document.getElementById(pageId)) {
@@ -1267,8 +1400,8 @@
         renderRecapTable();
       }
 
-      if (pageName === 'export') {
-        updateExportStats();
+      if (pageName === 'profil') {
+        updateProfileStats();
       }
     }
 
@@ -1304,7 +1437,7 @@
         }
 
         if (!isEditMode && isJamSubmitted(currentDate, currentHour)) {
-          alert('⚠️ Jam ini sudah dikirim sebelumnya.\n\nUntuk mengubah data, klik tombol "✏️ Edit Data"');
+          alert('⚠����� Jam ini sudah dikirim sebelumnya.\n\nUntuk mengubah data, klik tombol "✏️ Edit Data"');
           return;
         }
 
@@ -1362,54 +1495,6 @@
       // Filter recap
       document.getElementById('btn-filter').addEventListener('click', renderRecapTable);
 
-      // Export buttons
-      document.getElementById('btn-export-csv').addEventListener('click', exportToCSV);
-      document.getElementById('btn-export-pdf').addEventListener('click', exportToPDF);
-
-      // Export date shortcuts
-      document.getElementById('btn-set-today').addEventListener('click', () => {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const dd = String(today.getDate()).padStart(2, '0');
-        const dateStr = `${yyyy}-${mm}-${dd}`;
-        
-        document.getElementById('export-from-date').value = dateStr;
-        document.getElementById('export-to-date').value = dateStr;
-        updateExportStats();
-      });
-
-      document.getElementById('btn-set-week').addEventListener('click', () => {
-        const today = new Date();
-        const first = today.getDate() - today.getDay() + 1;
-        const firstDay = new Date(today.setDate(first));
-        const lastDay = new Date(today.setDate(today.getDate() + 6));
-
-        const formatDate = (date) => {
-          const yyyy = date.getFullYear();
-          const mm = String(date.getMonth() + 1).padStart(2, '0');
-          const dd = String(date.getDate()).padStart(2, '0');
-          return `${yyyy}-${mm}-${dd}`;
-        };
-
-        document.getElementById('export-from-date').value = formatDate(firstDay);
-        document.getElementById('export-to-date').value = formatDate(lastDay);
-        updateExportStats();
-      });
-
-      // Export date change listeners
-      document.getElementById('export-from-date').addEventListener('change', updateExportStats);
-      document.getElementById('export-to-date').addEventListener('change', updateExportStats);
-
-      // Edit search listeners
-      let searchTimeout;
-      document.getElementById('edit-search-date').addEventListener('change', searchEditRecords);
-      document.getElementById('edit-search-hour').addEventListener('change', searchEditRecords);
-      document.getElementById('edit-search-student').addEventListener('input', () => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(searchEditRecords, 100);
-      });
-
       // Set default filter dates
       const today = new Date();
       const yyyy = today.getFullYear();
@@ -1419,6 +1504,47 @@
 
       document.getElementById('filter-from').value = todayStr;
       document.getElementById('filter-to').value = todayStr;
+
+      // Toggle switches
+      document.querySelectorAll('.toggle-switch').forEach(toggle => {
+        const setting = toggle.dataset.setting;
+        const savedValue = localStorage.getItem(`setting-${setting}`);
+        const div = toggle.querySelector('div');
+
+        if (savedValue === 'true') {
+          div.classList.add('translate-x-6');
+          if (setting === 'darkmode') {
+            toggle.classList.remove('bg-gray-300');
+            toggle.classList.add('bg-gradient-success');
+            document.body.classList.add('dark-mode');
+          } else {
+            toggle.classList.add('bg-gradient-success');
+          }
+        }
+
+        toggle.addEventListener('click', function() {
+          const div = this.querySelector('div');
+          const isEnabled = div.classList.toggle('translate-x-6');
+          localStorage.setItem(`setting-${setting}`, isEnabled);
+          
+          if (setting === 'darkmode') {
+            document.body.classList.toggle('dark-mode');
+            if (isEnabled) {
+              this.classList.remove('bg-gray-300');
+              this.classList.add('bg-gradient-success');
+            } else {
+              this.classList.remove('bg-gradient-success');
+              this.classList.add('bg-gray-300');
+            }
+          } else {
+            if (isEnabled) {
+              this.classList.add('bg-gradient-success');
+            } else {
+              this.classList.remove('bg-gradient-success');
+            }
+          }
+        });
+      });
     }
 
     function updateCurrentDate() {
@@ -1426,6 +1552,17 @@
       const dateStr = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
       document.getElementById('current-date').textContent = dateStr;
     }
+
+    function updateCurrentTime() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('current-time').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    setInterval(updateCurrentTime, 1000);
+    updateCurrentTime();
 
     // =====================
     // Data SDK Handler
@@ -1435,6 +1572,7 @@
         attendanceRecords = data || [];
         updateSubmittedJams();
         updateHourOptions();
+        updateProfileStats();
       }
     };
 
@@ -1460,6 +1598,12 @@
     // Initialize App
     // =====================
     async function initializeApp() {
+      // Load dark mode setting
+      const darkModeSetting = localStorage.getItem('setting-darkmode');
+      if (darkModeSetting === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+
       updateCurrentDate();
 
       if (window.elementSdk) {
@@ -1478,11 +1622,12 @@
 
       await loadStudentData();
       initSchedule();
+      initEditSchedule();
       setupEventListeners();
       showPage('home');
     }
 
     initializeApp();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bd7c9d3c7c5ce31',t:'MTc2ODMzNzY2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bd7de4fa298ce31',t:'MTc2ODMzODUwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
